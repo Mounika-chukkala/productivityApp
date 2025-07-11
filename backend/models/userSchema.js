@@ -11,18 +11,39 @@ const userSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
   },
+  username:{
+type: String,
+      required: true,
+      unique: true,
+  },
   password: {
     type: String,
     required: true,
   },
+   isVerify: {
+      type: Boolean,
+      default: false,
+    },
   profilePic: {
     type: String,
     default: "",
   },
-//   streakCount: {
-//     type: Number,
-//     default: 0,
-//   },
+  googleAuth: {
+      type: Boolean,
+      default: false,
+    },
+    profilePicId: {
+      type: String,
+      default: null,
+    },
+    habits:[{
+      type:String,
+      default:""
+    }],
+  streak: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"Streak",
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

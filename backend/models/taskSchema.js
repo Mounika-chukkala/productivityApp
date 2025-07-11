@@ -18,6 +18,18 @@ const taskSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  frequency: {
+    type: String,
+    enum: ["once", "daily", "weekly", "monthly"],
+    default: "once",
+  },  priority: {
+    type: String,
+    enum: ["low", "medium", "high"],
+    default: "medium",
+  },
+  endDate: {
+    type: Date,
+  },
   completed: {
     type: Boolean,
     default: false,
