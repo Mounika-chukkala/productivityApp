@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div style="
+  background-color: #FFFBF7;
+  padding: 2rem;
+  font-family: sans-serif;
+  color: #1E293B;
+">
+  <div style="
+    background-color: #FFFFFF;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    max-width: 400px;
+    margin: auto;
+  ">
+    <h2 style="color: #FB923C; margin-bottom: 0.5rem;">
+      Today's Tasks
+    </h2>
+    <p style="color: #475569; margin-bottom: 1rem;">
+      Finish your key tasks and brighten your streak!
+    </p>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+      <span> Write daily journal</span>
+      <span style="color: #38BDF8;">Completed</span>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+      <span> Morning stretch</span>
+      <span style="color: #FBBF24;">In progress</span>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <span> Check emails</span>
+      <span style="color: #EF4444;">Pending</span>
+    </div>
+
+    <div style="margin-top: 1.5rem; text-align: center;">
+      <button style="
+        background-color: #FB923C;
+        color: #FFFFFF;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        cursor: pointer;
+      ">
+        Start Now
+      </button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
