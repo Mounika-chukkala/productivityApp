@@ -8,9 +8,17 @@ const habitSchema = new mongoose.Schema({
   name: {
      type: String, 
      required: true }, 
+     frequency:{
+      type:String,
+      default:"daily"
+     },
   currentStreak: {
      type: Number,
       default: 0 },
+      maxStreak:{
+         type:Number,
+         default:0
+      },
   lastCompleted: {
      type: Date, 
      default: null },

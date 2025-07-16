@@ -51,7 +51,7 @@ async function getTasks(req, res) {
 async function updateTask(req, res) {
   try {
     const userId = req.user;
-    const taskId = req.params.taskId;
+    const taskId = req.params.id;
     let task = await Task.findOne({ _id: taskId, user: userId });
     if (!task) {
       return res
@@ -59,27 +59,30 @@ async function updateTask(req, res) {
         .json({ success: false, message: "Task not found" });
     }
 
-        const { title,
-      description,
-      scheduledDate,
-      reminderTime,
-      frequency,
-      endDate,
-      priority } = req.body;
-task.title=title || task.title;
-task.description = description||task.description;
-task.reminderTime=reminderTime|| task.reminderTime;
-task.frequency=frequency||task.frequency;
-task.endDate=endDate|| task.endDate;
+      //   const { title,
+      // description,
+      // scheduledDate,
+      // reminderTime,
+      // frequency,
+      // endDate,
+      // priority } = req.body;
+      const {completed}=req.body;
+// task.title=title || task.title;
+// task.description = description||task.description;
+// task.reminderTime=reminderTime|| task.reminderTime;
+// task.frequency=frequency||task.frequency;
+// task.endDate=endDate|| task.endDate;
 
-task.scheduledDate = scheduledDate || task.scheduledDate;
- task.priority = priority || task.priority;
+// task.scheduledDate = scheduledDate || task.scheduledDate;
+//  task.priority = priority || task.priority;
  task.completed = completed || task.completed;
 
  await task.save();
 
-     res.status(200).json({ message: "Task updated", task });
-
+if(completed)return res.status(200).json({ message: "Task completed successfully", task });
+else{
+  return  res.status(200).json({ message: "Task undone successfully", task })
+}
   } catch (error) {
     return res.status(500).json({
       message: error.message,
