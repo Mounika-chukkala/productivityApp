@@ -8,8 +8,6 @@ const habitSchema = new mongoose.Schema({
   name: {
      type: String, 
      required: true }, 
-  description: { 
-    type: String },
   currentStreak: {
      type: Number,
       default: 0 },

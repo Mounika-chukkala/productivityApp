@@ -4,7 +4,8 @@ const {generateJWT,verifyJWT}=require("../utils/generateToken")
 const ShortUniqueId = require("short-unique-id");
 const { randomUUID } = new ShortUniqueId({ length: 7 });
 const transporter  = require("../utils/transporter");
-const {EMAIL_HOST,EMAIL_PASS,EMAIL_PORT,EMAIL_USER} =require("../config/dotenv.config")
+const {FIREBASE_ADMIN_TYPE,FIREBASE_PROJECT_ID,FIREBASE_PRIVATE_KEY_ID,FIREBASE_PRIVATE_KEY
+  ,FIREBASE_CLIENT_EMAIL,FIREBASE_CLIENT_ID,FRONTEND_URL,FIREBASE_AUTH_URI,FIREBASE_TOKEN_URI,FIREBASE_AUTH_PROVIDER,FIREBASE_CLIENT_CERT_URL,FIREBASE_UNIVERSE_DOMAIN,EMAIL_USER} =require("../config/dotenv.config")
 const admin=require("firebase-admin")
 const {getAuth}=require("firebase-admin/auth")
 admin.initializeApp({
@@ -79,7 +80,7 @@ const sendingEmail=await transporter.sendMail({
   return res.status(200).json({
       success: true,
       message: "Please Check Your Email to verify your account",
-      user:user
+      user:checkForexistingUser
     });
 }
 

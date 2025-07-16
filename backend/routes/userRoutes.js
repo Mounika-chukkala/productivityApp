@@ -3,7 +3,7 @@ const router=express.Router();
 const User=require("../models/userSchema")
 
 const {createUser,login,verifyEmail,googleAuth}=require("../controllers/userController");
-const verifyUser=require("../middlewares/auth")
+// const verifyUser=require("../middlewares/auth")
 
 router.post("/signup", createUser);
 router.post("/signin", login);

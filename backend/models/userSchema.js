@@ -37,8 +37,8 @@ type: String,
       default: null,
     },
     habits:[{
-      type:String,
-      default:""
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Habit"
     }],
   streak: {
     type: mongoose.Schema.Types.ObjectId,

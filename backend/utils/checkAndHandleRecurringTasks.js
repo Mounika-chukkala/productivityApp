@@ -1,5 +1,5 @@
 const Notification=require("../models/Notifications")
-
+const Task=require("../models/taskSchema")
 async function createNotification  (userId, message) { 
   const newNotif = new Notification({
     user: userId,
@@ -14,7 +14,6 @@ async function checkAndHandleRecurringTasks() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Find all recurring tasks that are due today or overdue
     const tasks = await Task.find({
       frequency: { $in: ["weekly", "monthly"] },
       scheduledDate: { $lte: today },

@@ -1,5 +1,6 @@
-const Habit = require("../models/Habit");
-
+// const { default: Habits } = require("../../frontend/src/pages/Habits");
+const Habit = require("../models/habitSchema");
+const User=require("../models/userSchema")
 const markHabitDone = async (req, res) => {
   try {
     const habitId = req.params.id;
@@ -39,3 +40,43 @@ const markHabitDone = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+async function getHabits(req,res){
+const userId=req.user;
+try {
+ const habits = await Habit.find({ user: userId });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "habits fetched successfully",
+        habits: habits,
+      });} catch (error) {
+    res.status(500).json({ error: error.message });
+  
+}
+}
+
+async function addHabit(req,res){
+  try {
+    const userId=req.user;
+            const { title,frequency      } = req.body;
+        const newHabit = new Task({
+          user: userId,
+          name:title,
+          frequency: frequency || "Daily",
+        });
+        await newHabit.save();
+        await User.findByIdAndUpdate(  )
+        res
+          .status(201)
+          .json({ success: true, message: "Habit added", habit: newHabit });
+      }
+  catch (error) {
+        res.status(500).json({ error: error.message });
+
+  }
+
+}
+
+module.exports={markHabitDone,getHabits,addHabit}
