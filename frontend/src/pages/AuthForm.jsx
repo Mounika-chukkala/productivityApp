@@ -35,7 +35,7 @@ function AuthForm({ type }) {
           navigate("/signin");
         } else {
           dispatch(login(res.data.user)); 
-          navigate("/home");
+          navigate("/");
           
         }
       }
@@ -55,7 +55,7 @@ function AuthForm({ type }) {
         }
       );
       dispatch(login(res.data.user));
-        navigate("/home");
+        navigate("/");
     
 
       toast.success(res.data.message);

@@ -6,6 +6,9 @@ import AuthForm from "./pages/AuthForm"
 import VerifyUser from "./pages/VerifyUser"
 import Dashboard from "./pages/Dashboard"
 import HomePage from "./pages/HomePage"
+import NextDayPlanner from "./components/NextDayPlanner"
+import TodayView from "./components/TodayView"
+import Notifications from "./pages/Notifications"
 
 function App() {
 
@@ -21,7 +24,9 @@ function App() {
   <Route path="/tasks" element={<Tasks />} />
   <Route path="/habits" element={<Habits />} /> {/* updated */}
     <Route path="/dashboard" element={<Dashboard />} />
-
+<Route path="/plan-next-day" element={<NextDayPlanner/>}/>
+<Route path="/today" element={<TodayView/>}/>
+<Route path="/notifications" element={<Notifications/>}/>
   </Route>
    </Routes>
     </div>

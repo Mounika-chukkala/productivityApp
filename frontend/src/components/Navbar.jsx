@@ -32,8 +32,7 @@ export default function Navbar() {
     <>
       <nav className="bg-white shadow-sm px-6 py-4 flex justify-between items-center border-b border-gray-200 sticky top-0 z-50">
         <Link to="/home" className="flex items-center gap-2 font-extrabold text-2xl font-sans select-none text-[#3D550C]">
-          Productivity
-        </Link>
+Momentumly        </Link>
 
         <div className="hidden md:flex items-center gap-5 text-[#2F3E2F] font-sans text-base font-semibold">
           <Link to="/" className="flex items-center gap-1 hover:text-[#81B622] transition">Home</Link>
@@ -41,17 +40,21 @@ export default function Navbar() {
             <>
               <Link to="/tasks" className="flex items-center gap-1 hover:text-[#81B622] transition">Tasks</Link>
               <Link to="/habits" className="flex items-center gap-1 hover:text-[#81B622] transition"> Habits</Link>
+                            {/* <Link to="/today" className="flex items-center gap-1 hover:text-[#81B622] transition"> Planning</Link> */}
+
               {/* <Link to="/dashboard" className="flex items-center gap-1 hover:text-[#81B622] transition"><LayoutDashboard size={18} /> Dashboard</Link> */}
             </>
           )}
-          <Link to="/notifications" className="hover:text-[#81B622] transition"><Bell size={20} /></Link>
 
           {user.token ? (
+            <>
+            <Link to="/notifications" className="hover:text-[#81B622] transition"><Bell size={20} /></Link>
             <img
             onClick={() => setProfileDialog((prev) => !prev)}
-                src={user.profilePic || `https://api.dicebear.com/9.x/initials/svg?seed=${user.name}`}
-                className="rounded-full w-6 h-6"
-              />
+            src={user.profilePic || `https://api.dicebear.com/9.x/initials/svg?seed=${user.name}`}
+            className="rounded-full w-6 h-6"
+            />
+            </>
           ) : (
             <>
               <Link to="/signin" className="flex items-center gap-1 hover:text-[#81B622] transition"><LogIn size={18} /> Sign In</Link>
@@ -62,14 +65,15 @@ export default function Navbar() {
 
         {/* Mobile */}
         <div className="md:hidden flex items-center gap-3">
-          <Link to="/notifications" className="hover:text-[#81B622] transition"><Bell size={22} /></Link>
-          {user.token ? (
+          {user.token ? (<>
+              <Link to="/notifications" className="hover:text-[#81B622] transition"><Bell size={22} /></Link>
             <Link to="/dashboard">
               <img
                 src={user.profilePic || `https://api.dicebear.com/9.x/initials/svg?seed=${user.name}`}
                 className="rounded-full w-7 h-7"
               />
             </Link>
+            </>
           ) : (
             <Link to="/signup" className="rounded-full p-1 bg-gradient-to-r from-[#3D550C] to-[#81B622] text-white hover:from-[#81B622] hover:to-[#3D550C] transition"><UserPlus size={18} /></Link>
           )}
@@ -85,6 +89,8 @@ export default function Navbar() {
                 <>
                   <Link to="/tasks" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Tasks</Link>
                   <Link to="/habits" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Habits</Link>
+                                    {/* <Link to="/today" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Planning</Link> */}
+
                   <div onClick={() => { handleLogout(); setIsOpen(false); }} className="flex items-center gap-2 hover:text-[#81B622] cursor-pointer"> Log Out</div>
                 </>
               )}
