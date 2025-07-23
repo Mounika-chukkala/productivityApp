@@ -22,10 +22,14 @@ const Tasks = () => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
       setTasks(res.data.tasks);
+      // console.log(tasks)
+
+      // console.log("hi")
     } catch (e) { console.error(e); }
   };
-  useEffect(()=>fetchTasks
-    , []);
+  useEffect(()=>{
+    fetchTasks()
+   } , []);
 const handleSubmit = async () => {
     if (!formData.title || !formData.scheduledDate) {
       alert("Title and Scheduled Date are required!");
@@ -148,7 +152,7 @@ const handleSubmit = async () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <button onClick={()=>toggleComplete(task._id, task.completed)}
-                      className="focus:outline-none">
+                      className="focus:outline-none text-[#617240]">
                       {task.completed ? "Undo":"Done" }
                     </button>
                     <button onClick={()=>deleteTask(task._id)} className="text-gray-400 hover:text-red-500">

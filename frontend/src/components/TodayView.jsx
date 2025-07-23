@@ -1,4 +1,94 @@
+// import React, { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import axios from "axios";
+// import { CalendarCheck, CheckCircle } from "lucide-react";
+
+// const TodayView = () => {
+//   const [events, setEvents] = useState([]);
+//   const [goals, setGoals] = useState([]);
+//   const navigate = useNavigate();
+
+//   const todayDate = new Date().toISOString().split("T")[0];
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const [eventRes, goalRes] = await Promise.all([
+//           axios.get(`${import.meta.env.VITE_BACKEND_URL}/get-events`),
+//           axios.get(`${import.meta.env.VITE_BACKEND_URL}/get-goals`)
+//         ]);
+//         setEvents(eventRes.data || []);
+//         setGoals(goalRes.data || []);
+//       } catch (error) {
+//         console.error("Error fetching today's data:", error);
+//       }
+//     };
+
+//     fetchData();
+//   }, []);
+
+//   return (
+//     <div className="p-6 bg-[#F0FDF4] min-h-screen text-[#065F46]">
+//       <h1 className="text-2xl font-bold mb-4 text-[#064E3B]">Today's Overview</h1>
+
+//       {/* Events Section */}
+//       <section className="mb-8">
+//         <div className="flex items-center gap-2 mb-2">
+//           <CalendarCheck className="text-[#10B981]" />
+//           <h2 className="text-xl font-semibold">Events</h2>
+//         </div>
+//         {events.length > 0 ? (
+//           <ul className="space-y-2">
+//             {events.map((event) => (
+//               <li key={event._id} className="bg-white rounded-xl p-3 shadow-sm border border-gray-200">
+//                 <div className="font-medium">{event.title}</div>
+//                 <div className="text-sm text-gray-600">{event.time}</div>
+//               </li>
+//             ))}
+//           </ul>
+//         ) : (
+//           <p className="text-sm text-gray-500">No events for today.</p>
+//         )}
+//       </section>
+
+//       {/* Goals Section */}
+//       <section className="mb-10">
+//         <div className="flex items-center gap-2 mb-2">
+//           <CheckCircle className="text-[#10B981]" />
+//           <h2 className="text-xl font-semibold">Goals</h2>
+//         </div>
+//         {goals.length > 0 ? (
+//           <ul className="space-y-2">
+//             {goals.map((goal) => (
+//               <li key={goal._id} className="bg-white rounded-xl p-3 shadow-sm border border-gray-200">
+//                 <div className="font-medium">{goal.description}</div>
+//                 <div className="text-sm text-gray-600">{goal.status}</div>
+//               </li>
+//             ))}
+//           </ul>
+//         ) : (
+//           <p className="text-sm text-gray-500">No goals set for today.</p>
+//         )}
+//       </section>
+
+//       {/* Plan Next Day Button */}
+//       <div className="flex justify-center">
+//         <button
+//           onClick={() => navigate("/plan-next-day")}
+//           className="bg-[#10B981] hover:bg-[#059669] text-white px-6 py-2 rounded-full shadow-md transition-all"
+//         >
+//           Plan Next Day
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TodayView;
+
+
 import React, { useEffect, useState } from "react";
+import {useSelector} from "react-redux"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CalendarCheck, CheckCircle } from "lucide-react";
@@ -7,18 +97,16 @@ const TodayView = () => {
   const [events, setEvents] = useState([]);
   const [goals, setGoals] = useState([]);
   const navigate = useNavigate();
-
-  const todayDate = new Date().toISOString().split("T")[0];
-
+const {token}=useSelector((slice)=>slice.user)
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [eventRes, goalRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_BACKEND_URL}/get-events`),
-          axios.get(`${import.meta.env.VITE_BACKEND_URL}/get-goals`)
-        ]);
-        setEvents(eventRes.data || []);
-        setGoals(goalRes.data || []);
+        const res= await axios.get(`${import.meta.env.VITE_BACKEND_URL}/get-plan?date=${new Date().getDate()}`,{headers:{
+            'Authorization':`Bearer ${token}`
+          }})
+console.log(res)
+        setEvents(res.data.plans?.events || []);
+        setGoals(res.data.plans?.goals || []);
       } catch (error) {
         console.error("Error fetching today's data:", error);
       }
@@ -28,21 +116,21 @@ const TodayView = () => {
   }, []);
 
   return (
-    <div className="p-6 bg-[#F0FDF4] min-h-screen text-[#065F46]">
-      <h1 className="text-2xl font-bold mb-4 text-[#064E3B]">Today's Overview</h1>
+    <div className="p-6 min-h-screen mx-auto w-[60%] text-[#3D550C]">
+      <h1 className="text-3xl font-bold mb-6 text-[#3D550C]">Today's Overview</h1>
 
       {/* Events Section */}
       <section className="mb-8">
-        <div className="flex items-center gap-2 mb-2">
-          <CalendarCheck className="text-[#10B981]" />
-          <h2 className="text-xl font-semibold">Events</h2>
+        <div className="flex items-center gap-2 mb-4">
+          <CalendarCheck className="text-[#81B622]" />
+          <h2 className="text-2xl font-semibold">Events</h2>
         </div>
         {events.length > 0 ? (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {events.map((event) => (
-              <li key={event._id} className="bg-white rounded-xl p-3 shadow-sm border border-gray-200">
-                <div className="font-medium">{event.title}</div>
-                <div className="text-sm text-gray-600">{event.time}</div>
+              <li key={event._id} className="bg-white rounded-2xl p-4 shadow-md border border-[#D2E3C8]">
+                <div className="font-semibold text-[#3D550C]">{event.title}</div>
+                <div className="text-sm text-[#6B8E23]">{event.time}</div>
               </li>
             ))}
           </ul>
@@ -53,16 +141,16 @@ const TodayView = () => {
 
       {/* Goals Section */}
       <section className="mb-10">
-        <div className="flex items-center gap-2 mb-2">
-          <CheckCircle className="text-[#10B981]" />
-          <h2 className="text-xl font-semibold">Goals</h2>
+        <div className="flex items-center gap-2 mb-4">
+          <CheckCircle className="text-[#81B622]" />
+          <h2 className="text-2xl font-semibold">Goals</h2>
         </div>
         {goals.length > 0 ? (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {goals.map((goal) => (
-              <li key={goal._id} className="bg-white rounded-xl p-3 shadow-sm border border-gray-200">
-                <div className="font-medium">{goal.description}</div>
-                <div className="text-sm text-gray-600">{goal.status}</div>
+              <li key={goal._id} className="bg-white rounded-2xl p-4 shadow-md border border-[#D2E3C8]">
+                <div className="font-semibold text-[#3D550C]">{goal.description}</div>
+                <div className="text-sm text-[#6B8E23]">{goal.status}</div>
               </li>
             ))}
           </ul>
@@ -75,7 +163,7 @@ const TodayView = () => {
       <div className="flex justify-center">
         <button
           onClick={() => navigate("/plan-next-day")}
-          className="bg-[#10B981] hover:bg-[#059669] text-white px-6 py-2 rounded-full shadow-md transition-all"
+          className="bg-[#81B622] hover:bg-[#6B8E23] text-white px-6 py-2 rounded-full shadow-lg transition-all"
         >
           Plan Next Day
         </button>

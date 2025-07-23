@@ -18,7 +18,13 @@ const markHabitDone = async (req, res) => {
                                    d1.getMonth() === d2.getMonth() &&
                                    d1.getDate() === d2.getDate();
 
-    const isSameWeek = (d1, d2) => {
+    const isYesterday = (d1, d2) => {
+      const yesterday = new Date(d2);
+      yesterday.setDate(yesterday.getDate() - 1);
+      return isSameDay(d1, yesterday);
+    };
+
+    const isLastWeek = (d1, d2) => {
       const getWeekStart = (d) => {
         const date = new Date(d);
         const day = date.getDay();
@@ -27,11 +33,17 @@ const markHabitDone = async (req, res) => {
         date.setHours(0,0,0,0);
         return date;
       };
-      return getWeekStart(d1).getTime() === getWeekStart(d2).getTime();
+      const currentWeekStart = getWeekStart(d2);
+      const lastWeekStart = new Date(currentWeekStart);
+      lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+      return getWeekStart(d1).getTime() === lastWeekStart.getTime();
     };
 
-    const isSameMonth = (d1, d2) => d1.getFullYear() === d2.getFullYear() &&
-                                    d1.getMonth() === d2.getMonth();
+    const isLastMonth = (d1, d2) => {
+      const prevMonth = new Date(d2.getFullYear(), d2.getMonth() - 1, 1);
+      return d1.getFullYear() === prevMonth.getFullYear() &&
+             d1.getMonth() === prevMonth.getMonth();
+    };
 
     if (last) {
       if (
@@ -40,9 +52,20 @@ const markHabitDone = async (req, res) => {
         (freq === "monthly" && isSameMonth(today, last))
       ) {
         return res.status(400).json({ message: "Already marked for this period!" });
+      }
+
+      const missed = (
+        (freq === "daily" && !isYesterday(last, today)) ||
+        (freq === "weekly" && !isLastWeek(last, today)) ||
+        (freq === "monthly" && !isLastMonth(last, today))
+      );
+
+      if (missed) {
+        habit.currentStreak = 1; // they’re starting over today
       } else {
         habit.currentStreak += 1;
       }
+
     } else {
       habit.currentStreak = 1;
     }
@@ -56,20 +79,93 @@ const markHabitDone = async (req, res) => {
   }
 };
 
-async function getHabits(req,res){
-const userId=req.user;
-try {
- const habits = await Habit.find({ user: userId });
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "habits fetched successfully",
-        habits: habits,
-      });} catch (error) {
+
+async function getHabits(req, res) {
+  const userId = req.user;
+  try {
+    const habits = await Habit.find({ user: userId });
+
+    const today = new Date();
+
+    const isSameDay = (d1, d2) =>
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate();
+
+    const isYesterday = (d1, d2) => {
+      const yesterday = new Date(d2);
+      yesterday.setDate(yesterday.getDate() - 1);
+      return isSameDay(d1, yesterday);
+    };
+
+    const isLastWeek = (d1, d2) => {
+      const getWeekStart = (d) => {
+        const date = new Date(d);
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+        date.setDate(diff);
+        date.setHours(0, 0, 0, 0);
+        return date;
+      };
+      const currentWeekStart = getWeekStart(d2);
+      const lastWeekStart = new Date(currentWeekStart);
+      lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+      return getWeekStart(d1).getTime() === lastWeekStart.getTime();
+    };
+
+    const isLastMonth = (d1, d2) => {
+      const prevMonth = new Date(d2.getFullYear(), d2.getMonth() - 1, 1);
+      return (
+        d1.getFullYear() === prevMonth.getFullYear() &&
+        d1.getMonth() === prevMonth.getMonth()
+      );
+    };
+
+    for (const habit of habits) {
+      const freq = habit.frequency.toLowerCase();
+      const last = habit.lastCompleted ? new Date(habit.lastCompleted) : null;
+
+      if (last) {
+        let missed = false;
+
+        if (freq === "daily") {
+          if (!isSameDay(last, today) && !isYesterday(last, today)) missed = true;
+        } else if (freq === "weekly") {
+          const getWeekStart = (d) => {
+            const date = new Date(d);
+            const day = date.getDay();
+            const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+            date.setDate(diff);
+            date.setHours(0, 0, 0, 0);
+            return date;
+          };
+          const thisWeek = getWeekStart(today).getTime();
+          const lastWeek = getWeekStart(last).getTime();
+          if (thisWeek !== lastWeek && !isLastWeek(last, today)) missed = true;
+        } else if (freq === "monthly") {
+          if (
+            last.getFullYear() !== today.getFullYear() ||
+            last.getMonth() !== today.getMonth()
+          ) {
+            if (!isLastMonth(last, today)) missed = true;
+          }
+        }
+
+        if (missed) {
+          habit.currentStreak = 0;
+          await habit.save(); // persist the reset
+        }
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "habits fetched successfully",
+      habits: habits,
+    });
+  } catch (error) {
     res.status(500).json({ error: error.message });
-  
-}
+  }
 }
 
 async function addHabit(req,res){

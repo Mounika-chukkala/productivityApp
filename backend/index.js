@@ -7,8 +7,9 @@ const taskRoutes=require("./routes/taskRoutes");
 const userRoutes=require("./routes/userRoutes");
 const habitRoutes=require("./routes/habitRoutes");
 const cron = require("node-cron");
-const checkAndHandleRecurringTasks=require("./utils/checkAndHandleRecurringTasks")
-const notificationRouter=require("./routes/notificationRouter");
+const notificationRouter=require("./routes/notifications");
+const analyticsRouter=require("./routes/analyticsRoutes")
+const planningRouter=require("./routes/planningRoutes")
 const app=express()
 app.use(express.json());
 app.use(cors({origin:"*"}));
@@ -16,19 +17,15 @@ app.get("/",(req,res)=>{
     res.send("Hello ,welcome to Pen It")
 })
 
-cron.schedule("17 12 * * *", () => {
-  console.log("Running recurring task check...");
-  checkAndHandleRecurringTasks();
-  // archiveTodayData()
-});
 
 app.use("/api/v1",userRoutes);
 app.use("/api/v1",notificationRouter);
 
 app.use("/api/v1",taskRoutes);
 app.use("/api/v1",habitRoutes)
+app.use("/api/v1",planningRouter)
 
-// app.use("/api/v1",goalRoutes)
+app.use("/api/v1/analytics",analyticsRouter)
 // app.use("/api/v1",eventRoutes)
 app.listen(port,()=>{
     console.log("server started")

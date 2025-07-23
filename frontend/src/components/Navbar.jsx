@@ -40,7 +40,7 @@ Momentumly        </Link>
             <>
               <Link to="/tasks" className="flex items-center gap-1 hover:text-[#81B622] transition">Tasks</Link>
               <Link to="/habits" className="flex items-center gap-1 hover:text-[#81B622] transition"> Habits</Link>
-                            {/* <Link to="/today" className="flex items-center gap-1 hover:text-[#81B622] transition"> Planning</Link> */}
+                            <Link to="/today" className="flex items-center gap-1 hover:text-[#81B622] transition"> Planning</Link>
 
               {/* <Link to="/dashboard" className="flex items-center gap-1 hover:text-[#81B622] transition"><LayoutDashboard size={18} /> Dashboard</Link> */}
             </>
@@ -49,11 +49,13 @@ Momentumly        </Link>
           {user.token ? (
             <>
             <Link to="/notifications" className="hover:text-[#81B622] transition"><Bell size={20} /></Link>
+          <Link to="/dashboard">
             <img
             onClick={() => setProfileDialog((prev) => !prev)}
             src={user.profilePic || `https://api.dicebear.com/9.x/initials/svg?seed=${user.name}`}
             className="rounded-full w-6 h-6"
             />
+            </Link>
             </>
           ) : (
             <>
@@ -89,7 +91,7 @@ Momentumly        </Link>
                 <>
                   <Link to="/tasks" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Tasks</Link>
                   <Link to="/habits" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Habits</Link>
-                                    {/* <Link to="/today" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Planning</Link> */}
+                                    <Link to="/today" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Planning</Link>
 
                   <div onClick={() => { handleLogout(); setIsOpen(false); }} className="flex items-center gap-2 hover:text-[#81B622] cursor-pointer"> Log Out</div>
                 </>

@@ -10,7 +10,7 @@ const HomePage = () => {
       {/* Hero Section */}
       <section className="px-6 py-24 text-center">
         <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight mb-4">
-          Welcome to <span className="text-[#81B622]">MyProductivity</span>
+          Welcome to <span className="text-[#81B622]">Momentumly</span>
         </h1>
         <p className="text-lg text-gray-700 max-w-2xl mx-auto mt-2">
           Organize your day, build meaningful habits, and track your goals—all in one focused, distraction-free space.
