@@ -6,12 +6,19 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const { token } = useSelector((state) => state.user);
 
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
   const fetchNotifications = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/notifications`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setNotifications(res.data);
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/notifications`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setNotifications(res.data.reverse());
     } catch (err) {
       console.error("Failed to fetch notifications", err);
     }
@@ -19,65 +26,44 @@ const Notifications = () => {
 
   const markAsRead = async (id) => {
     try {
-      await axios.patch(
+      await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/mark-read/${id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      fetchNotifications(); // Refresh list
+      fetchNotifications();
     } catch (err) {
-      console.error("Failed to mark notification", err);
+      console.error("Failed to mark as read", err);
     }
   };
-
-  const deleteNotification = async (id) => {
-    try {
-      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/notifications/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setNotifications((prev) => prev.filter((n) => n._id !== id));
-    } catch (err) {
-      console.error("Failed to delete notification", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md max-w-md mx-auto my-4">
-      <h2 className="text-xl font-semibold mb-2">🔔 Notifications</h2>
+    <div className="p-6 bg-[#f6fdf4] rounded-xl shadow-lg max-w-xl mx-auto my-6 border border-[#cde4cb]">
+      <h2 className="text-2xl font-semibold text-[#4b8b3b] mb-4 flex items-center gap-2">
+        🔔 Notifications
+      </h2>
       {notifications.length === 0 ? (
-        <p className="text-gray-500">No notifications yet.</p>
+        <p className="text-[#4b8b3b] text-lg">No notifications yet.</p>
       ) : (
         <ul className="space-y-3">
           {notifications.map((notif) => (
             <li
               key={notif._id}
-              className={`p-3 rounded-md border shadow-sm ${
-                notif.isRead ? "bg-gray-100" : "bg-blue-50"
+              className={`flex items-start justify-between p-4 rounded-lg shadow-sm transition duration-200 ${
+                notif.read
+                  ? "bg-[#dbead2] text-gray-600"
+                  : "bg-[#c8e6b0] text-[#1e3a1a] font-medium"
               }`}
             >
-              <div className="flex justify-between items-center">
-                <p>{notif.message}</p>
-                <div className="flex gap-2 ml-4">
-                  {!notif.isRead && (
-                    <button
-                      onClick={() => markAsRead(notif._id)}
-                      className="text-sm text-green-600 hover:underline"
-                    >
-                      Mark as read
-                    </button>
-                  )}
-                  <button
-                    onClick={() => deleteNotification(notif._id)}
-                    className="text-sm text-red-500 hover:underline"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
+              <span className="pr-3">{notif.message}</span>
+              {!notif.read && (
+                <button
+                  onClick={() => markAsRead(notif._id)}
+                  className=" cursor-pointer ml-4 text-sm bg-[#4b8b3b] text-white px-3 py-1 rounded-md hover:bg-[#3a6c2c] transition"
+                >
+                  Mark as Read
+                </button>
+              )}
             </li>
           ))}
         </ul>

@@ -43,7 +43,7 @@ const Dashboard = () => {
             <img
   src={`${flaskURL}/chart/progress?user_id=${user.id}&token=${user.token}&t=${Date.now()}`}
   alt="Progress Chart"
-  className="w-full rounded-xl"
+  className="w-[90%] rounded-xl"
 />
 <img
   src={`${flaskURL}/chart/distribution?user_id=${user.id}&token=${user.token}&t=${Date.now()}`}

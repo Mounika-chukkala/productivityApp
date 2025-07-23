@@ -1,6 +1,7 @@
 // const { default: Habits } = require("../../frontend/src/pages/Habits");
 const Habit = require("../models/habitSchema");
 const User=require("../models/userSchema")
+const Notification=require("../models/Notification")
 const markHabitDone = async (req, res) => {
   try {
     const habitId = req.params.id;
@@ -72,6 +73,10 @@ const markHabitDone = async (req, res) => {
 
     habit.lastCompleted = today;
     await habit.save();
+await Notification.create({
+  user: req.user,
+  message: `🎉 You completed "${habit.name}" for now! Great job!`,
+});
 
     res.status(200).json({ message: "Habit marked as done!", habit });
   } catch (error) {
@@ -182,6 +187,11 @@ async function addHabit(req,res){
       { $push: { habits: newHabit._id } },
       { new: true })
       // console.log(newHabit,frequency)
+      await Notification.create({
+  user: userId,
+  message: `New habit "${newHabit.name}" added to your tracker.`,
+});
+
         res
           .status(201)
           .json({ success: true, message: "Habit added", habit: newHabit });

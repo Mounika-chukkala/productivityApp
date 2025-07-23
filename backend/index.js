@@ -5,6 +5,8 @@ const { PORT, FRONTEND_URL } = require("./config/dotenv.config")
 const port=PORT || 5000
 const taskRoutes=require("./routes/taskRoutes");
 const userRoutes=require("./routes/userRoutes");
+const scheduleMissedHabitCheck = require("./cron/missedHabitCheck");
+const scheduleMorningCheck=require("./cron/morningReminder")
 const habitRoutes=require("./routes/habitRoutes");
 const cron = require("node-cron");
 const notificationRouter=require("./routes/notifications");
@@ -31,4 +33,6 @@ app.listen(port,()=>{
     console.log("server started")
     dbConnect();
     console.log("Database connected successfully")
+    scheduleMissedHabitCheck()
+    scheduleMorningCheck()
 })
