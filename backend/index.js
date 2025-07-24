@@ -10,6 +10,7 @@ const scheduleMorningCheck=require("./cron/morningReminder")
 const habitRoutes=require("./routes/habitRoutes");
 const cron = require("node-cron");
 const notificationRouter=require("./routes/notifications");
+const notesRouter=require("./routes/noteRoutes");
 const analyticsRouter=require("./routes/analyticsRoutes")
 const planningRouter=require("./routes/planningRoutes")
 const app=express()
@@ -26,6 +27,7 @@ app.use("/api/v1",notificationRouter);
 app.use("/api/v1",taskRoutes);
 app.use("/api/v1",habitRoutes)
 app.use("/api/v1",planningRouter)
+app.use("/api/v1",notesRouter)
 
 app.use("/api/v1/analytics",analyticsRouter)
 // app.use("/api/v1",eventRoutes)

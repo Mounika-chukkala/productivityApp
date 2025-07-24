@@ -9,11 +9,12 @@ import HomePage from "./pages/HomePage"
 import NextDayPlanner from "./components/NextDayPlanner"
 import TodayView from "./components/TodayView"
 import Notifications from "./pages/Notifications"
+import Notes from "./pages/Notes"
 
 function App() {
 
   return (
-    <div className="w-screen min-h-screen overflow-hidden">
+    <div className="w-screen bg-[#f6fdf4] min-h-screen overflow-hidden">
    <Routes>
           <Route path="/" element={<Navbar />}>
       <Route path="/" element={<HomePage />} />
@@ -26,6 +27,8 @@ function App() {
     <Route path="/dashboard" element={<Dashboard />} />
 <Route path="/plan-next-day" element={<NextDayPlanner/>}/>
 <Route path="/today" element={<TodayView/>}/>
+<Route path="/notes" element={<Notes/>}/>
+
 <Route path="/notifications" element={<Notifications/>}/>
   </Route>
    </Routes>

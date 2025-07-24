@@ -31,7 +31,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="bg-white shadow-sm px-6 py-4 flex justify-between items-center border-b border-gray-200 sticky top-0 z-50">
-        <Link to="/home" className="flex items-center gap-2 font-extrabold text-2xl font-sans select-none text-[#3D550C]">
+        <Link to="/" className="flex items-center gap-2 font-extrabold text-2xl font-sans select-none text-[#3D550C]">
 Momentumly        </Link>
 
         <div className="hidden md:flex items-center gap-5 text-[#2F3E2F] font-sans text-base font-semibold">
@@ -40,6 +40,8 @@ Momentumly        </Link>
             <>
               <Link to="/tasks" className="flex items-center gap-1 hover:text-[#81B622] transition">Tasks</Link>
               <Link to="/habits" className="flex items-center gap-1 hover:text-[#81B622] transition"> Habits</Link>
+                                      <Link to="/notes" className="flex items-center gap-1 hover:text-[#81B622] transition"> Notes</Link>
+
                             <Link to="/today" className="flex items-center gap-1 hover:text-[#81B622] transition"> Planning</Link>
 
               {/* <Link to="/dashboard" className="flex items-center gap-1 hover:text-[#81B622] transition"><LayoutDashboard size={18} /> Dashboard</Link> */}
@@ -91,6 +93,8 @@ Momentumly        </Link>
                 <>
                   <Link to="/tasks" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Tasks</Link>
                   <Link to="/habits" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Habits</Link>
+                                    <Link to="/notes" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Notes</Link>
+
                                     <Link to="/today" onClick={() => setIsOpen(false)} className="flex items-center gap-2 hover:text-[#81B622]"> Planning</Link>
 
                   <div onClick={() => { handleLogout(); setIsOpen(false); }} className="flex items-center gap-2 hover:text-[#81B622] cursor-pointer"> Log Out</div>

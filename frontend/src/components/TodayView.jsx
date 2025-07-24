@@ -1,111 +1,49 @@
-// import React, { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import axios from "axios";
-// import { CalendarCheck, CheckCircle } from "lucide-react";
-
-// const TodayView = () => {
-//   const [events, setEvents] = useState([]);
-//   const [goals, setGoals] = useState([]);
-//   const navigate = useNavigate();
-
-//   const todayDate = new Date().toISOString().split("T")[0];
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const [eventRes, goalRes] = await Promise.all([
-//           axios.get(`${import.meta.env.VITE_BACKEND_URL}/get-events`),
-//           axios.get(`${import.meta.env.VITE_BACKEND_URL}/get-goals`)
-//         ]);
-//         setEvents(eventRes.data || []);
-//         setGoals(goalRes.data || []);
-//       } catch (error) {
-//         console.error("Error fetching today's data:", error);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   return (
-//     <div className="p-6 bg-[#F0FDF4] min-h-screen text-[#065F46]">
-//       <h1 className="text-2xl font-bold mb-4 text-[#064E3B]">Today's Overview</h1>
-
-//       {/* Events Section */}
-//       <section className="mb-8">
-//         <div className="flex items-center gap-2 mb-2">
-//           <CalendarCheck className="text-[#10B981]" />
-//           <h2 className="text-xl font-semibold">Events</h2>
-//         </div>
-//         {events.length > 0 ? (
-//           <ul className="space-y-2">
-//             {events.map((event) => (
-//               <li key={event._id} className="bg-white rounded-xl p-3 shadow-sm border border-gray-200">
-//                 <div className="font-medium">{event.title}</div>
-//                 <div className="text-sm text-gray-600">{event.time}</div>
-//               </li>
-//             ))}
-//           </ul>
-//         ) : (
-//           <p className="text-sm text-gray-500">No events for today.</p>
-//         )}
-//       </section>
-
-//       {/* Goals Section */}
-//       <section className="mb-10">
-//         <div className="flex items-center gap-2 mb-2">
-//           <CheckCircle className="text-[#10B981]" />
-//           <h2 className="text-xl font-semibold">Goals</h2>
-//         </div>
-//         {goals.length > 0 ? (
-//           <ul className="space-y-2">
-//             {goals.map((goal) => (
-//               <li key={goal._id} className="bg-white rounded-xl p-3 shadow-sm border border-gray-200">
-//                 <div className="font-medium">{goal.description}</div>
-//                 <div className="text-sm text-gray-600">{goal.status}</div>
-//               </li>
-//             ))}
-//           </ul>
-//         ) : (
-//           <p className="text-sm text-gray-500">No goals set for today.</p>
-//         )}
-//       </section>
-
-//       {/* Plan Next Day Button */}
-//       <div className="flex justify-center">
-//         <button
-//           onClick={() => navigate("/plan-next-day")}
-//           className="bg-[#10B981] hover:bg-[#059669] text-white px-6 py-2 rounded-full shadow-md transition-all"
-//         >
-//           Plan Next Day
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default TodayView;
 
 
 import React, { useEffect, useState } from "react";
-import {useSelector} from "react-redux"
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { CalendarCheck, CheckCircle } from "lucide-react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const TodayView = () => {
   const [events, setEvents] = useState([]);
   const [goals, setGoals] = useState([]);
+  const [checkedGoals, setCheckedGoals] = useState(() => {
+    const stored = localStorage.getItem("checkedGoals");
+    return stored ? JSON.parse(stored) : {};
+  });
+
   const navigate = useNavigate();
-const {token}=useSelector((slice)=>slice.user)
+  const { token } = useSelector((slice) => slice.user);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res= await axios.get(`${import.meta.env.VITE_BACKEND_URL}/get-plan?date=${new Date().getDate()}`,{headers:{
-            'Authorization':`Bearer ${token}`
-          }})
-console.log(res)
+        const res = await axios.get(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/get-plan?date=${new Date().getDate()}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setEvents(res.data.plans?.events || []);
+        const sortedEvents = events.sort((a, b) => {
+          const parseTime = (timeStr) => {
+            const [time, modifier] = timeStr.split(" ");
+            let [hours, minutes] = time.split(":").map(Number);
+
+            if (modifier === "PM" && hours !== 12) hours += 12;
+            if (modifier === "AM" && hours === 12) hours = 0;
+
+            return hours * 60 + minutes;
+          };
+
+          return parseTime(a.time) - parseTime(b.time);
+        });
+        setEvents(sortedEvents)
         setGoals(res.data.plans?.goals || []);
       } catch (error) {
         console.error("Error fetching today's data:", error);
@@ -115,57 +53,86 @@ console.log(res)
     fetchData();
   }, []);
 
-  return (
-    <div className="p-6 min-h-screen mx-auto w-[60%] text-[#3D550C]">
-      <h1 className="text-3xl font-bold mb-6 text-[#3D550C]">Today's Overview</h1>
+  useEffect(() => {
+    localStorage.setItem("checkedGoals", JSON.stringify(checkedGoals));
+  }, [checkedGoals]);
 
-      {/* Events Section */}
-      <section className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <CalendarCheck className="text-[#81B622]" />
-          <h2 className="text-2xl font-semibold">Events</h2>
-        </div>
+  const toggleGoal = (goal) => {
+    setCheckedGoals((prev) => ({
+      ...prev,
+      [goal]: !prev[goal],
+    }));
+  };
+
+  return (
+    <div className="p-6 min-h-screen max-w-4xl mx-auto bg-[#FAFAF5]  text-[#3D550C]">
+      <h1 className="text-3xl font-bold mb-8 text-center">Today's Overview</h1>
+
+      <section className="mb-10">
+        <h2 className="text-xl font-semibold mb-4 border-b pb-2 border-[#DDEEC6]">
+          {" "}
+          Events
+        </h2>
         {events.length > 0 ? (
-          <ul className="space-y-3">
-            {events.map((event) => (
-              <li key={event._id} className="bg-white rounded-2xl p-4 shadow-md border border-[#D2E3C8]">
-                <div className="font-semibold text-[#3D550C]">{event.title}</div>
-                <div className="text-sm text-[#6B8E23]">{event.time}</div>
-              </li>
+          <div className="space-y-2">
+            {events.map((event, index) => (
+              <div
+                key={index}
+                className="border flex justify-between border-[#DDEEC6] p-3 bg-white text-[#3D550C] hover:bg-[#F5FBEF] transition"
+              >
+                <p className="font-semibold">{event.title}</p>
+                <p className="text-sm text-[#2d352a]">{event.time}</p>
+              </div>
             ))}
-          </ul>
+          </div>
         ) : (
-          <p className="text-sm text-gray-500">No events for today.</p>
+          <p className="text-sm text-gray-500">No events planned today.</p>
         )}
       </section>
 
       {/* Goals Section */}
-      <section className="mb-10">
-        <div className="flex items-center gap-2 mb-4">
-          <CheckCircle className="text-[#81B622]" />
-          <h2 className="text-2xl font-semibold">Goals</h2>
-        </div>
+      <section className="mb-12">
+        <h2 className="text-xl font-semibold mb-4 border-b pb-2 border-[#dcf0c1]">
+          {" "}
+          Goals
+        </h2>
         {goals.length > 0 ? (
-          <ul className="space-y-3">
-            {goals.map((goal) => (
-              <li key={goal._id} className="bg-white rounded-2xl p-4 shadow-md border border-[#D2E3C8]">
-                <div className="font-semibold text-[#3D550C]">{goal.description}</div>
-                <div className="text-sm text-[#6B8E23]">{goal.status}</div>
-              </li>
+          <div className="space-y-2">
+            {goals.map((goal, index) => (
+              <label key={index} className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={checkedGoals[goal] || false}
+                  onChange={() => toggleGoal(goal)}
+                  className="accent-[#536e1b] w-5 h-5"
+                />
+                <span
+                  className={`text-base ${
+                    checkedGoals[goal]
+                      ? "line-through text-gray-400"
+                      : "text-[#3D550C]"
+                  }`}
+                >
+                  {goal}
+                </span>
+              </label>
             ))}
-          </ul>
+          </div>
         ) : (
-          <p className="text-sm text-gray-500">No goals set for today.</p>
+          <p className="text-sm text-gray-500">No goals added today.</p>
         )}
       </section>
 
       {/* Plan Next Day Button */}
-      <div className="flex justify-center">
+      <div className="text-center relative">
         <button
-          onClick={() => navigate("/plan-next-day")}
-          className="bg-[#81B622] hover:bg-[#6B8E23] text-white px-6 py-2 rounded-full shadow-lg transition-all"
+          onClick={() => {
+            localStorage.removeItem("checkedGoals");
+            navigate("/plan-next-day");
+          }}
+          className="px-8 absolute right-0  py-3 bg-[#81B622] hover:bg-[#6B8E23] text-white font-semibold transition"
         >
-          Plan Next Day
+          Plan for Next Day
         </button>
       </div>
     </div>
