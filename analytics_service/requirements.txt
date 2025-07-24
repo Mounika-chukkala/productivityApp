@@ -5,5 +5,5 @@ dotenv
 numpy 
 gunicorn
 requests
-numoy 
+numpy 
 io
