@@ -131,4 +131,5 @@ def chart_overdue_vs_completed():
     return send_file(img, mimetype='image/png')
 
 if __name__ == '__main__':
-    app.run(port=5001,debug=True) 
+    port= int(os.environ.get("PORT", 5000))
+    app.run(port,debug=True) 
