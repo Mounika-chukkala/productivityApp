@@ -4,3 +4,6 @@ pandas
 dotenv
 numpy 
 gunicorn
+requests
+numoy 
+io
