@@ -3,11 +3,13 @@ import matplotlib
 matplotlib.use('Agg') 
 import matplotlib.pyplot as plt
 import io
+import os
 import requests
 import numpy as np
 app = Flask(__name__)
-
-NODE_API = 'http://localhost:3000/api/v1/analytics'
+from dotenv import load_dotenv
+load_dotenv()
+NODE_API =  os.environ.get("NODE_API")
 
 @app.route('/chart/progress')
 def chart_progress():
