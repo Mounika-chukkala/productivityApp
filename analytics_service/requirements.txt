@@ -1,3 +1,5 @@
 flask
 matplotlib
 pandas 
+dotenv
+numpy 
