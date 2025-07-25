@@ -7,23 +7,23 @@ import os
 import requests
 import numpy as np
 import time
-from werkzeug.middleware.proxy_fix import ProxyFix
+# from werkzeug.middleware.proxy_fix import ProxyFix
 from flask import redirect
 app = Flask(__name__)
 
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+# app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 from dotenv import load_dotenv
 load_dotenv()
 NODE_API =  os.environ.get("NODE_API")
 # NODE_API = os.getenv("NODE_API", "http://localhost:3000/api/v1/analytics")
 
 
-@app.before_request
-def enforce_https_in_production():
-    # This is critical for Render and HTTPS to work correctly
-    if request.headers.get('X-Forwarded-Proto', 'http') == 'http':
-        url = request.url.replace('http://', 'https://', 1)
-        return redirect(url, code=301)
+# @app.before_request
+# def enforce_https_in_production():
+#     # This is critical for Render and HTTPS to work correctly
+#     if request.headers.get('X-Forwarded-Proto', 'http') == 'http':
+#         url = request.url.replace('http://', 'https://', 1)
+#         return redirect(url, code=301)
 
 @app.route('/chart/progress')
 def chart_progress():
