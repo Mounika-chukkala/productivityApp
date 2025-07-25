@@ -11,6 +11,7 @@ app = Flask(__name__)
 from dotenv import load_dotenv
 load_dotenv()
 NODE_API =  os.environ.get("NODE_API")
+# NODE_API = os.getenv("NODE_API", "http://localhost:3000/api/v1/analytics")
 
 @app.route('/chart/progress')
 def chart_progress():
@@ -90,45 +91,45 @@ def chart_distribution():
     print(f"[INFO] /chart/distribution total time: {time.time()-start_time:.2f}s")
     return send_file(img, mimetype='image/png')
 
-@app.route('/chart/streak')
-def chart_streak():
-    start_time = time.time()
-    print(f"[INFO] /chart/streak called for user_id={request.args.get('user_id')}")
-    user_id = request.args.get('user_id', None)
-    token = request.args.get('token')
-    headers = {
-        'Authorization': f"Bearer {token}"
-    }
-    try:
-        t0 = time.time()
-        resp = requests.get(f'{NODE_API}/streak', params={'user_id': user_id},headers=headers)
-        t1 = time.time()
-        print(f"[INFO] Node backend /streak took {t1-t0:.2f}s, status={resp.status_code}")
-        data = resp.json()
-    except Exception as e:
-        print(f"[ERROR] Failed to fetch /streak: {e}")
-        return "Error fetching streak data", 500
-    try:
-        t2 = time.time()
-        days = data['days']
-        streaks = data['streaks']
-        plt.figure(figsize=(8,4))
-        plt.bar(days, streaks, color='skyblue')
-        plt.title('Streak Visualization')
-        plt.xlabel('Habit')
-        plt.ylabel('Current Streak')
-        plt.tight_layout()
-        img = io.BytesIO()
-        plt.savefig(img, format='png')
-        img.seek(0)
-        plt.close()
-        t3 = time.time()
-        print(f"[INFO] Chart generation took {t3-t2:.2f}s")
-    except Exception as e:
-        print(f"[ERROR] Failed to generate streak chart: {e}")
-        return "Error generating chart", 500
-    print(f"[INFO] /chart/streak total time: {time.time()-start_time:.2f}s")
-    return send_file(img, mimetype='image/png')
+# @app.route('/chart/streak')
+# def chart_streak():
+#     start_time = time.time()
+#     print(f"[INFO] /chart/streak called for user_id={request.args.get('user_id')}")
+#     user_id = request.args.get('user_id', None)
+#     token = request.args.get('token')
+#     headers = {
+#         'Authorization': f"Bearer {token}"
+#     }
+#     try:
+#         t0 = time.time()
+#         resp = requests.get(f'{NODE_API}/streak', params={'user_id': user_id},headers=headers)
+#         t1 = time.time()
+#         print(f"[INFO] Node backend /streak took {t1-t0:.2f}s, status={resp.status_code}")
+#         data = resp.json()
+#     except Exception as e:
+#         print(f"[ERROR] Failed to fetch /streak: {e}")
+#         return "Error fetching streak data", 500
+#     try:
+#         t2 = time.time()
+#         days = data['days']
+#         streaks = data['streaks']
+#         plt.figure(figsize=(8,4))
+#         plt.bar(days, streaks, color='skyblue')
+#         plt.title('Streak Visualization')
+#         plt.xlabel('Habit')
+#         plt.ylabel('Current Streak')
+#         plt.tight_layout()
+#         img = io.BytesIO()
+#         plt.savefig(img, format='png')
+#         img.seek(0)
+#         plt.close()
+#         t3 = time.time()
+#         print(f"[INFO] Chart generation took {t3-t2:.2f}s")
+#     except Exception as e:
+#         print(f"[ERROR] Failed to generate streak chart: {e}")
+#         return "Error generating chart", 500
+#     print(f"[INFO] /chart/streak total time: {time.time()-start_time:.2f}s")
+#     return send_file(img, mimetype='image/png')
 
 @app.route('/chart/time-allocation')
 def chart_time_allocation():    

@@ -50,11 +50,11 @@ const Dashboard = () => {
   alt="Distribution Chart"
   className="w-full rounded-xl"
 />
-<img
+{/* <img
   src={`${flaskURL}/chart/streak?user_id=${user.id}&token=${user.token}&t=${Date.now()}`}
   alt="Streak Chart"
   className="w-full rounded-xl"
-/>
+/> */}
 <img
   src={`${flaskURL}/chart/time-allocation?user_id=${user.id}&token=${user.token}&t=${Date.now()}`}
   alt="Time Allocation Chart"
