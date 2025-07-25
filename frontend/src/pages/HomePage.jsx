@@ -6,7 +6,7 @@ const HomePage = () => {
   const user = useSelector((state) => state.user);
 
   return (
-    <div className="max-h-screen bg-[#f6fdf4] text-[#3d550c] font-sans flex flex-col overflow-hidden">
+    <div className="min-h-screen bg-[#f6fdf4] text-[#3d550c] font-sans flex flex-col overflow-hidden">
       <section className="  flex flex-col justify-center items-center text-center px-6 py-15 ">
         <h1 className="md:text-3xl font-extrabold tracking-tight leading-tight mb-4">
           Welcome to <span className="text-[#81b622]">Momentumly</span>
