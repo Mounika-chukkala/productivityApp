@@ -83,12 +83,11 @@ const Notification=require("../models/Notification")
 //   }
 // };
 
-
-const isSameDay = (d1, d2) => {
-  return d1.getDate() === d2.getDate() &&
-         d1.getMonth() === d2.getMonth() &&
-         d1.getFullYear() === d2.getFullYear();
-};
+const isSameDay = (d1, d2) => (
+  d1.getDate() === d2.getDate() &&
+  d1.getMonth() === d2.getMonth() &&
+  d1.getFullYear() === d2.getFullYear()
+);
 
 const isYesterday = (d1, d2) => {
   const yesterday = new Date(d2);
@@ -96,22 +95,23 @@ const isYesterday = (d1, d2) => {
   return isSameDay(d1, yesterday);
 };
 
-const isSameWeek = (d1, d2) => {
-  const getWeekStart = (d) => {
-    const date = new Date(d);
-    const day = date.getDay();
-    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-    date.setDate(diff);
-    date.setHours(0, 0, 0, 0);
-    return date;
-  };
-  return getWeekStart(d1).getTime() === getWeekStart(d2).getTime();
+const getWeekStart = (d) => {
+  const date = new Date(d);
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+  date.setDate(diff);
+  date.setHours(0, 0, 0, 0);
+  return date;
 };
 
-const isSameMonth = (d1, d2) => {
-  return d1.getFullYear() === d2.getFullYear() &&
-         d1.getMonth() === d2.getMonth();
-};
+const isSameWeek = (d1, d2) => (
+  getWeekStart(d1).getTime() === getWeekStart(d2).getTime()
+);
+
+const isSameMonth = (d1, d2) => (
+  d1.getFullYear() === d2.getFullYear() &&
+  d1.getMonth() === d2.getMonth()
+);
 
 const isLastWeek = (d1, d2) => {
   const lastWeek = new Date(d2);
@@ -124,6 +124,8 @@ const isLastMonth = (d1, d2) => {
   lastMonth.setMonth(lastMonth.getMonth() - 1);
   return isSameMonth(d1, lastMonth);
 };
+
+// ---------- MAIN CONTROLLER ----------
 
 const markHabitDone = async (req, res) => {
   try {
@@ -155,7 +157,7 @@ const markHabitDone = async (req, res) => {
       return res.status(400).json({ message: "Habit already marked for this period" });
     }
 
-    // Streak logic
+    // --- Handle streak update ---
     if (!lastDone) {
       habit.streak = 1;
     } else {
@@ -167,12 +169,17 @@ const markHabitDone = async (req, res) => {
       if (isPrevPeriod) {
         habit.streak += 1;
       } else {
-        habit.streak = 1; // reset streak
+        habit.streak = 1;
       }
     }
 
     habit.lastDone = now;
     await habit.save();
+
+    await Notification.create({
+      user: req.user,
+      message: `🎉 You completed "${habit.name}" for now! Great job!`,
+    });
 
     res.status(200).json({ message: "Habit marked as done", habit });
   } catch (error) {
