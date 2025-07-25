@@ -14,7 +14,7 @@ import Notes from "./pages/Notes"
 function App() {
 
   return (
-    <div className="w-screen bg-[#f6fdf4] min-h-screen overflow-hidden">
+    <div className="w-screen bg-[#f6fdf4] font-sans min-h-screen overflow-hidden">
    <Routes>
           <Route path="/" element={<Navbar />}>
       <Route path="/" element={<HomePage />} />
