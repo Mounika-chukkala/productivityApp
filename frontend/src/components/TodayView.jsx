@@ -65,8 +65,8 @@ const TodayView = () => {
   };
 
   return (
-    <div className="p-6 min-h-screen max-w-4xl mx-auto bg-[#FAFAF5]  text-[#3D550C]">
-      <h1 className="text-3xl font-bold mb-8 text-center">Today's Overview</h1>
+    <div className="p-6 min-h-screen font-sans max-w-4xl mx-auto bg-[#FAFAF5]  text-[#3D550C]">
+      <h1 className="text-xl sm:text-3xl  font-bold mb-8 text-center">Today's Overview</h1>
 
       <section className="mb-10">
         <h2 className="text-xl font-semibold mb-4 border-b pb-2 border-[#DDEEC6]">

@@ -46,7 +46,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="w-full flex lg:flex-col  flex-row items-center lg:w-80 bg-white p-6 lg:rounded-2xl shadow-lg lg:text-center">
+        <div className="w-full flex lg:flex-col   lg:rounded-2xl bg-white h-[300px]  flex-row items-center lg:w-80  p-6  shadow-lg lg:text-center">
           <div className="flex mr-5 justify-start lg:justify-center mb-4">
             <img
               src={
@@ -58,7 +58,7 @@ const Dashboard = () => {
               className="lg:w-24 lg:h-24 w-15 h-15 rounded-full border-4 border-[#3D550C] object-cover"
             />
           </div>
-          <div >
+          <div  className="bg-white lg:rounded-2xl">
 
           <h3 className="lg:text-xl text-md font-bold text-[#3D550C] mb-1">{user.name}</h3>
           <p className="text-gray-500 mb-1">@{user.username}</p>
