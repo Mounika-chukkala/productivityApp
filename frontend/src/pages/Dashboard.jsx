@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 const Dashboard = () => {
   const user = useSelector((state) => state.user);
   // const flaskURL = "http://localhost:5001";
-    const flaskURL = import.meta.env.FLASK_URL;
+    const flaskURL = import.meta.env.VITE_FLASK_URL;
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
