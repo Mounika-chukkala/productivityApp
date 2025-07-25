@@ -3,7 +3,6 @@ const Habit = require("../models/habitSchema");
 const Notification = require("../models/Notification");
 const mongoose = require("mongoose");
 
-// ⏰ Every day at 10:00 PM
 const scheduleMissedHabitCheck = () => {
   cron.schedule("0 22 * * *", async () => {
     console.log("🔁 Running Missed Habit Check...");

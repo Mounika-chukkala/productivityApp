@@ -30,7 +30,6 @@ app.use("/api/v1",planningRouter)
 app.use("/api/v1",notesRouter)
 
 app.use("/api/v1/analytics",analyticsRouter)
-// app.use("/api/v1",eventRoutes)
 app.listen(port,()=>{
     console.log("server started")
     dbConnect();

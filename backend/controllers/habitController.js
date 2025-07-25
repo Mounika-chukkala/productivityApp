@@ -1,4 +1,3 @@
-// const { default: Habits } = require("../../frontend/src/pages/Habits");
 const Habit = require("../models/habitSchema");
 const User=require("../models/userSchema")
 const Notification=require("../models/Notification")
@@ -158,7 +157,7 @@ async function getHabits(req, res) {
 
         if (missed) {
           habit.currentStreak = 0;
-          await habit.save(); // persist the reset
+          await habit.save(); 
         }
       }
     }

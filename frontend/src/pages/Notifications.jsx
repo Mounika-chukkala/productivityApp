@@ -40,7 +40,7 @@ const Notifications = () => {
   return (
     <div className="p-6 bg-[#f6fdf4] rounded-xl shadow-lg max-w-xl mx-auto my-6 border border-[#cde4cb]">
       <h2 className="text-2xl font-semibold text-[#4b8b3b] mb-4 flex items-center gap-2">
-        🔔 Notifications
+         Notifications
       </h2>
       {notifications.length === 0 ? (
         <p className="text-[#4b8b3b] text-lg">No notifications yet.</p>
