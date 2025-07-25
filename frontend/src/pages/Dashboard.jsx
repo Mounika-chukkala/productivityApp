@@ -15,31 +15,7 @@ const Dashboard = () => {
           </h2>
 
           <div className="space-y-6">
-            {/* <img
-              src={`${flaskURL}/chart/progress?user_id=${user.id}&token=${user.token}`}
-              alt="Progress Chart"
-              className="w-full rounded-xl"
-            />
-            <img
-              src={`${flaskURL}/chart/distribution?user_id=${user.id}&token=${user.token}`}
-              alt="Distribution Chart"
-              className="w-full rounded-xl"
-            />
-            <img
-              src={`${flaskURL}/chart/streak?user_id=${user.id}&token=${user.token}`}
-              alt="Streak Chart"
-              className="w-full rounded-xl"
-            />
-            <img
-              src={`${flaskURL}/chart/time-allocation?user_id=${user.id}&token=${user.token}`}
-              alt="Time Allocation Chart"
-              className="w-full rounded-xl"
-            />
-            <img
-              src={`${flaskURL}/chart/overdue-vs-completed?user_id=${user.id}&token=${user.token}`}
-              alt="Overdue vs Completed Chart"
-              className="w-full rounded-xl"
-            /> */}
+
 
             <img
   src={`${flaskURL}/chart/progress?user_id=${user.id}&token=${user.token}&t=${Date.now()}`}
@@ -49,7 +25,7 @@ const Dashboard = () => {
 <img
   src={`${flaskURL}/chart/distribution?user_id=${user.id}&token=${user.token}&t=${Date.now()}`}
   alt="Distribution Chart"
-  className="w-full rounded-xl"
+  className="w-[90%]   rounded-xl"
 />
 {/* <img
   src={`${flaskURL}/chart/streak?user_id=${user.id}&token=${user.token}&t=${Date.now()}`}
@@ -59,12 +35,12 @@ const Dashboard = () => {
 <img
   src={`${flaskURL}/chart/time-allocation?user_id=${user.id}&token=${user.token}&t=${Date.now()}`}
   alt="Time Allocation Chart"
-  className="w-full rounded-xl"
+  className="w-[90%]  rounded-xl"
 />
 <img
   src={`${flaskURL}/chart/overdue-vs-completed?user_id=${user.id}&token=${user.token}&t=${Date.now()}`}
   alt="Overdue vs Completed Chart"
-  className="w-full rounded-xl"
+  className="w-[90%]  rounded-xl"
 />
 
           </div>

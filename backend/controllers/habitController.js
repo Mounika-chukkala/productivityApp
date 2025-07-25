@@ -1,88 +1,185 @@
 const Habit = require("../models/habitSchema");
 const User=require("../models/userSchema")
 const Notification=require("../models/Notification")
+// const markHabitDone = async (req, res) => {
+//   try {
+//     const habitId = req.params.id;
+//     const habit = await Habit.findOne({ _id: habitId, user: req.user });
+
+//     if (!habit) {
+//       return res.status(404).json({ message: "Habit not found" });
+//     }
+
+//     const freq = habit.frequency.toLowerCase();
+//     const today = new Date();
+//     const last = habit.lastCompleted ? new Date(habit.lastCompleted) : null;
+
+//     const isSameDay = (d1, d2) => d1.getFullYear() === d2.getFullYear() &&
+//                                    d1.getMonth() === d2.getMonth() &&
+//                                    d1.getDate() === d2.getDate();
+
+//     const isYesterday = (d1, d2) => {
+//       const yesterday = new Date(d2);
+//       yesterday.setDate(yesterday.getDate() - 1);
+//       return isSameDay(d1, yesterday);
+//     };
+
+//     const isLastWeek = (d1, d2) => {
+//       const getWeekStart = (d) => {
+//         const date = new Date(d);
+//         const day = date.getDay();
+//         const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
+//         date.setDate(diff);
+//         date.setHours(0,0,0,0);
+//         return date;
+//       };
+//       const currentWeekStart = getWeekStart(d2);
+//       const lastWeekStart = new Date(currentWeekStart);
+//       lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+//       return getWeekStart(d1).getTime() === lastWeekStart.getTime();
+//     };
+
+//     const isLastMonth = (d1, d2) => {
+//       const prevMonth = new Date(d2.getFullYear(), d2.getMonth() - 1, 1);
+//       return d1.getFullYear() === prevMonth.getFullYear() &&
+//              d1.getMonth() === prevMonth.getMonth();
+//     };
+
+//     if (last) {
+//       if (
+//         (freq === "daily" && isSameDay(today, last)) ||
+//         (freq === "weekly" && isSameWeek(today, last)) ||
+//         (freq === "monthly" && isSameMonth(today, last))
+//       ) {
+//         return res.status(400).json({ message: "Already marked for this period!" });
+//       }
+
+//       const missed = (
+//         (freq === "daily" && !isYesterday(last, today)) ||
+//         (freq === "weekly" && !isLastWeek(last, today)) ||
+//         (freq === "monthly" && !isLastMonth(last, today))
+//       );
+
+//       if (missed) {
+//         habit.currentStreak = 1; // they’re starting over today
+//       } else {
+//         habit.currentStreak += 1;
+//       }
+
+//     } else {
+//       habit.currentStreak = 1;
+//     }
+
+//     habit.lastCompleted = today;
+//     await habit.save();
+// await Notification.create({
+//   user: req.user,
+//   message: `🎉 You completed "${habit.name}" for now! Great job!`,
+// });
+
+//     res.status(200).json({ message: "Habit marked as done!", habit });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+
+const isSameDay = (d1, d2) => {
+  return d1.getDate() === d2.getDate() &&
+         d1.getMonth() === d2.getMonth() &&
+         d1.getFullYear() === d2.getFullYear();
+};
+
+const isYesterday = (d1, d2) => {
+  const yesterday = new Date(d2);
+  yesterday.setDate(d2.getDate() - 1);
+  return isSameDay(d1, yesterday);
+};
+
+const isSameWeek = (d1, d2) => {
+  const getWeekStart = (d) => {
+    const date = new Date(d);
+    const day = date.getDay();
+    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+    date.setDate(diff);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  };
+  return getWeekStart(d1).getTime() === getWeekStart(d2).getTime();
+};
+
+const isSameMonth = (d1, d2) => {
+  return d1.getFullYear() === d2.getFullYear() &&
+         d1.getMonth() === d2.getMonth();
+};
+
+const isLastWeek = (d1, d2) => {
+  const lastWeek = new Date(d2);
+  lastWeek.setDate(lastWeek.getDate() - 7);
+  return isSameWeek(d1, lastWeek);
+};
+
+const isLastMonth = (d1, d2) => {
+  const lastMonth = new Date(d2);
+  lastMonth.setMonth(lastMonth.getMonth() - 1);
+  return isSameMonth(d1, lastMonth);
+};
+
 const markHabitDone = async (req, res) => {
   try {
     const habitId = req.params.id;
-    const habit = await Habit.findOne({ _id: habitId, user: req.user });
+    const habit = await Habit.findById(habitId);
 
     if (!habit) {
       return res.status(404).json({ message: "Habit not found" });
     }
 
-    const freq = habit.frequency.toLowerCase();
-    const today = new Date();
-    const last = habit.lastCompleted ? new Date(habit.lastCompleted) : null;
+    const now = new Date();
+    const lastDone = habit.lastDone ? new Date(habit.lastDone) : null;
 
-    const isSameDay = (d1, d2) => d1.getFullYear() === d2.getFullYear() &&
-                                   d1.getMonth() === d2.getMonth() &&
-                                   d1.getDate() === d2.getDate();
+    let alreadyMarked = false;
 
-    const isYesterday = (d1, d2) => {
-      const yesterday = new Date(d2);
-      yesterday.setDate(yesterday.getDate() - 1);
-      return isSameDay(d1, yesterday);
-    };
-
-    const isLastWeek = (d1, d2) => {
-      const getWeekStart = (d) => {
-        const date = new Date(d);
-        const day = date.getDay();
-        const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
-        date.setDate(diff);
-        date.setHours(0,0,0,0);
-        return date;
-      };
-      const currentWeekStart = getWeekStart(d2);
-      const lastWeekStart = new Date(currentWeekStart);
-      lastWeekStart.setDate(lastWeekStart.getDate() - 7);
-      return getWeekStart(d1).getTime() === lastWeekStart.getTime();
-    };
-
-    const isLastMonth = (d1, d2) => {
-      const prevMonth = new Date(d2.getFullYear(), d2.getMonth() - 1, 1);
-      return d1.getFullYear() === prevMonth.getFullYear() &&
-             d1.getMonth() === prevMonth.getMonth();
-    };
-
-    if (last) {
-      if (
-        (freq === "daily" && isSameDay(today, last)) ||
-        (freq === "weekly" && isSameWeek(today, last)) ||
-        (freq === "monthly" && isSameMonth(today, last))
-      ) {
-        return res.status(400).json({ message: "Already marked for this period!" });
-      }
-
-      const missed = (
-        (freq === "daily" && !isYesterday(last, today)) ||
-        (freq === "weekly" && !isLastWeek(last, today)) ||
-        (freq === "monthly" && !isLastMonth(last, today))
-      );
-
-      if (missed) {
-        habit.currentStreak = 1; // they’re starting over today
-      } else {
-        habit.currentStreak += 1;
-      }
-
-    } else {
-      habit.currentStreak = 1;
+    switch (habit.frequency) {
+      case "daily":
+        alreadyMarked = lastDone && isSameDay(lastDone, now);
+        break;
+      case "weekly":
+        alreadyMarked = lastDone && isSameWeek(lastDone, now);
+        break;
+      case "monthly":
+        alreadyMarked = lastDone && isSameMonth(lastDone, now);
+        break;
     }
 
-    habit.lastCompleted = today;
-    await habit.save();
-await Notification.create({
-  user: req.user,
-  message: `🎉 You completed "${habit.name}" for now! Great job!`,
-});
+    if (alreadyMarked) {
+      return res.status(400).json({ message: "Habit already marked for this period" });
+    }
 
-    res.status(200).json({ message: "Habit marked as done!", habit });
+    // Streak logic
+    if (!lastDone) {
+      habit.streak = 1;
+    } else {
+      const isPrevPeriod =
+        (habit.frequency === "daily" && isYesterday(lastDone, now)) ||
+        (habit.frequency === "weekly" && isLastWeek(lastDone, now)) ||
+        (habit.frequency === "monthly" && isLastMonth(lastDone, now));
+
+      if (isPrevPeriod) {
+        habit.streak += 1;
+      } else {
+        habit.streak = 1; // reset streak
+      }
+    }
+
+    habit.lastDone = now;
+    await habit.save();
+
+    res.status(200).json({ message: "Habit marked as done", habit });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error marking habit done:", error);
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
-
 
 async function getHabits(req, res) {
   const userId = req.user;
