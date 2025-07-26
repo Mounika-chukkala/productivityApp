@@ -59,8 +59,8 @@ function AuthForm({ type }) {
 
       toast.success(res.data.message);
     } catch (error) {
-    //   toast.error(error);
-    console.log(error)
+      toast.error(error.response.data.message);
+    // console.log(error)
     }
   }
 
