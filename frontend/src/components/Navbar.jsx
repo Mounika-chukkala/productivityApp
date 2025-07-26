@@ -32,9 +32,9 @@ export default function Navbar() {
   return (
     <>
       <nav className="bg-white shadow-sm px-6 py-4 flex justify-between items-center border-b border-gray-200 sticky top-0 z-50">
-        <Link to="/" className="flex items-center gap-2 font-extrabold text-2xl font-sans select-none text-[#3D550C]">
-<div className="flex items-center gap-2 text-[#1E293B] font-bold text-xl">
-      <Zap className="" size={28} />
+        <Link to="/" className="flex items-center gap-2 font-extrabold text-2xl font-sans select-none ">
+<div className="flex items-center gap-2 text-[#3D550C] font-bold text-xl">
+      <Zap className="" fill="#3D550C" size={28} />
       <span>Momentumly</span>
     </div>
         </Link>
