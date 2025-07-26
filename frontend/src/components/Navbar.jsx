@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate, Outlet } from "react-router-dom";
+import { Zap } from "lucide-react";
 import {
   Bell,
   User,
@@ -32,7 +33,11 @@ export default function Navbar() {
     <>
       <nav className="bg-white shadow-sm px-6 py-4 flex justify-between items-center border-b border-gray-200 sticky top-0 z-50">
         <Link to="/" className="flex items-center gap-2 font-extrabold text-2xl font-sans select-none text-[#3D550C]">
-Momentumly        </Link>
+<div className="flex items-center gap-2 text-[#1E293B] font-bold text-xl">
+      <Zap className="" size={28} />
+      <span>Momentumly</span>
+    </div>
+        </Link>
 
         <div className="hidden md:flex items-center gap-5 text-[#2F3E2F] font-sans text-base font-semibold">
           <Link to="/" className="flex items-center gap-1 hover:text-[#81B622] transition">Home</Link>
