@@ -15,6 +15,10 @@ const HomePage = () => {
           Organize your day, build meaningful habits, and track your goals—
           all in one focused, distraction-free space.
         </p>
+        <p className="mt-4 text-sm font-serif font-light text-black">
+          To know more about this platform feel free to go through this documentation.<a className="text-[#81b622]" href="https://docs.google.com/document/d/1Ux00D5lOMBcrIy_TmEghQvh8wfd93Sdh76QHgtwQM94/edit?usp=sharing">Click here</a>
+        </p>
+
         {!user.token && (
           <Link
             to="/signup"
