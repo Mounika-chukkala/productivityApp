@@ -67,13 +67,18 @@ function AuthForm({ type }) {
   return (
     <motion.div
       key={location.pathname}
-      className="min-h-screen bg-[#FFFFFF] flex justify-center items-start py-5 px-4 font-sans text-[#2F3E2F]"
+      className="min-h-screen relative bg-[#FFFFFF] flex justify-center items-start py-5 px-4 font-sans text-[#2F3E2F]"
     >
+       <div className=" absolute lg:right-15 lg:bottom-25 bottom-0 right-2">
+      <p className="text-sm text-slate-800">Sample login details: </p>
+      <p  className="text-sm text-slate-800">Email: mounika@gmail.com</p>
+      <p  className="text-sm text-slate-800">Password : 123456 </p>
+      </div>
       <motion.div
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3, duration: 1 }}
-        className="bg-white p-6 sm:p-8 rounded-2xl shadow-md w-full max-w-sm border border-[#A3B18A]"
+        className="mb-6 bg-white p-6 sm:p-8 rounded-2xl shadow-md w-full max-w-sm border border-[#A3B18A]"
       >
         <h2 className="text-2xl font-bold text-center mb-2 text-[#556B2F]">
           {type === "signup" ? "Create Account" : "Welcome Back"}
