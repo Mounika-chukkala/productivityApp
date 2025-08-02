@@ -69,7 +69,7 @@ function AuthForm({ type }) {
       key={location.pathname}
       className="max-h-screen relative bg-[#FFFFFF] flex justify-center items-start py-5 px-4 font-sans text-[#2F3E2F]"
     >
-       <div className=" absolute lg:right-15 lg:bottom-25 bottom-0 right-2">
+       <div className=" absolute lg:right-15 lg:bottom-10 bottom-0 right-2">
       <p className="text-sm text-slate-800">Sample login details: </p>
       <p  className="text-sm text-slate-800">Email: mounika@gmail.com</p>
       <p  className="text-sm text-slate-800">Password : 123456 </p>
