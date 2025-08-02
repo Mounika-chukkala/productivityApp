@@ -78,7 +78,7 @@ function AuthForm({ type }) {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3, duration: 1 }}
-        className="mb-6 bg-white p-6 sm:p-8 rounded-2xl shadow-md w-full max-w-sm border border-[#A3B18A]"
+        className="mb-2 bg-white p-6 sm:p-8 rounded-2xl shadow-md w-full max-w-sm border border-[#A3B18A]"
       >
         <h2 className="text-2xl font-bold text-center mb-2 text-[#556B2F]">
           {type === "signup" ? "Create Account" : "Welcome Back"}
