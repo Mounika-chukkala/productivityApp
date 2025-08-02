@@ -67,7 +67,7 @@ function AuthForm({ type }) {
   return (
     <motion.div
       key={location.pathname}
-      className="min-h-screen relative bg-[#FFFFFF] flex justify-center items-start py-5 px-4 font-sans text-[#2F3E2F]"
+      className="max-h-screen relative bg-[#FFFFFF] flex justify-center items-start py-5 px-4 font-sans text-[#2F3E2F]"
     >
        <div className=" absolute lg:right-15 lg:bottom-25 bottom-0 right-2">
       <p className="text-sm text-slate-800">Sample login details: </p>
